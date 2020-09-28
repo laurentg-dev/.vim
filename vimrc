@@ -59,3 +59,30 @@ set hlsearch              | " Active le surlignage des correspondance
 set ignorecase            | " Permet d'ignorer la case...
 set smartcase             | " ... mais si on met une maj dans la recherche la prend en compte
 
+" GENERAL MAPPINGS
+"Tabulation
+map tn : tabn<CR>         | " Passe à l'onglet vim suivant
+map tp : tabp<CR>         | " Passe à l'onglet vim précédent
+map th : tab help<Space>  | " Ouvre dans un nouvel onglet une page d'aide
+map tm : tabm<Space>      | " Décalle vers la droite + et vers la gauche - l'onglet actuel
+map tt : tabnew<Space>    | " Ouvre un nouvel onglet 
+map ts : tab split<Space> | " Ouvre dans un nouvel onglet un fichier existant
+noremap te : tabe<Space>  | " Ouvre dans un nouvel onglet un fichier existant
+
+":save
+noremap <c-z> :update<CR>
+vnoremap <c-z> <c-c>:update<CR>
+inoremap <c-z> <c-o>:update<CR>
+
+":nohl
+noremap <c-n> :nohl<CR>
+vnoremap <c-n> <c-c>:nohl<CR>
+inoremap <c-n> <c-o>:nohl<CR>
+
+":sort
+vnoremap <leader>t :sort<CR>
+
+"Search&Replace
+noremap ;; :%s:::gic<left><left><left><left><left>
+vnoremap ;; :s:::gic<left><left><left><left><left>
+
