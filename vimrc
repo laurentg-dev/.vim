@@ -49,9 +49,10 @@ syntax enable             | " Activation de la coloration syntaxique
 " Tab et limites du texte
 set expandtab             | " Remplace la tabulation par des espaces
 set tabstop=4    	      | " Remplace la tabulation par 4 espaces
+set shiftwidth=4          | " Elimine le bud d'indentation 8espaces...
 
 " Limitation de largeur du texte
-set textwidth=99          | " Par defaut, indépendemment du filetype, largeur max = 99!
+set textwidth=90          | " Par defaut, indépendemment du filetype, largeur max = 99!
 
 " Recherches et Surlignages dans le texte
 set incsearch             | " Active la recherche et surlignage pendant la saisie du texte
@@ -74,15 +75,39 @@ noremap <c-z> :update<CR>
 vnoremap <c-z> <c-c>:update<CR>
 inoremap <c-z> <c-o>:update<CR>
 
-":nohl
+":nohl : Ctrl+n permet d'arrêter le surlignage actif 
 noremap <c-n> :nohl<CR>
 vnoremap <c-n> <c-c>:nohl<CR>
 inoremap <c-n> <c-o>:nohl<CR>
 
-":sort
+":sort : Ctrl+t permet de trier l'ensemble des lignes selectionnées
 vnoremap <leader>t :sort<CR>
 
 "Search&Replace
 noremap ;; :%s:::gic<left><left><left><left><left>
 vnoremap ;; :s:::gic<left><left><left><left><left>
 
+" CONFIGURATION PLUGINS
+" GRUVBOX
+" Déclaration du thème
+set t_Co=256
+set background=dark
+colorscheme gruvbox
+
+" Fonction affichant la colone limite quand elle existe
+" Si textwidth est déclarée, accorde colorcolumn avec sa valeur
+" Sinon met la limite à 80 (pour 79)
+function! SetColorColumnPerFile()
+    "Récupération de la valeur de textwidth dans var-locale:textaille
+    let l:textaille = substitute(trim(execute(":set textwidth?")),"textwidth=","","")
+    if l:textaille == 0
+        setlocal colorcolumn=80
+    else
+        execute(":setlocal colorcolumn=".l:textaille)
+    endif
+endfunction
+"Lancement automatique à chaque chargement
+augroup colorcolumn
+    autocmd!
+    autocmd BufEnter * call SetColorColumnPerFile()
+augroup end
