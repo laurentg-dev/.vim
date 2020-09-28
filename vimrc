@@ -1,66 +1,78 @@
-"BASIC SETUP
-"Désactiver la compatibilité avec Vi
+" ========================================================================================
+" BASIC SETUP
+" ========================================================================================
+ 
+" -[ DÉSACTIVER LA COMPATIBILITÉ AVEC VI ]----------------------------------------------
 set nocompatible
 
-"Activer gestion des plugins Native de vim8
+" -[ "ACTIVER GESTION DES PLUGINS NATIVE DE VIM8 ]----------------------------------------
 packloadall
 
-"Modifications du vimrc actives à la sauvegarde du $MYVIMRC
+" -[ MODIFICATIONS DU VIMRC ACTIVES À LA SAUVEGARDE DU $MYVIMRC ]------------------------
 autocmd! bufwritepost $MYVIMRC source %
 
-"Racc. Save manuelle de la page actuelle => source $MYVIMRC
+" -[ RACC. SAVE MANUELLE DE LA PAGE ACTUELLE => SOURCE $MYVIMRC ]-------------------------
 map <silent> <F2> <Esc>:write <bar> :source $MYVIMRC<CR>
 
-"Modification de l'emplacement par défaut du viminfo
+" -[ MODIFICATION DE L'EMPLACEMENT PAR DÉFAUT DU VIMINFO ]-------------------------------
 set viminfo+=n~/.vim/viminfo
 
-"Définition de <Leader>
+" -[ DÉFINITION DE <LEADER> ]------------------------------------------------------------
 let mapleader = "²"
 
-"Activation des extensions du vimrc dans le dossier ~/.vim/config/
+" -[ ACTIVATION DES EXTENSIONS DU VIMRC DANS LE DOSSIER ~/.VIM/CONFIG/ ]------------------
 runtime! config/**/*.vim
 
-"Activation de la souris
+" -[ ACTIVATION DE LA SOURIS ]------------------------------------------------------------
 set mouse=a
 
-"OPTIONNALS SETTINGS
-"Indentation
+ 
+" ========================================================================================
+" OPTIONNALS SETTINGS
+" ========================================================================================
+ 
+" =[ INDENTATION ]========================================================================
 set autoindent            | " Préserve l'indentation de la ligne précédente
 set smartindent           | " Petit plus...
 
-" Affichage
+" =[  AFFICHAGE ]=========================================================================
 set title             	  | " Affiche le titre des fenêtres et terminaux en bas à gauche
 set number 		          | " Affiche le numéro des lignes
 set ruler                 | " Affiche barre bas à droite la position du curseur
 set wrap		          | " Lorsque la ligne est trop longue, l'affiche en dessous
 
-" Beep/Alerte
+" =[ BEEP/ALERTE ]========================================================================
 set belloff=all    	      | " Désactive toutes les alertes sonnores et visuelles
 
-" Diffsplit en vertical (defaut horizontal...pas pratique)
+" =[ DIFFSPLIT EN VERTICAL (DEFAUT HORIZONTAL...PAS PRATIQUE) ]===========================
 set diffopt=vertical      | " Permet comparaison cote à cote des fichiers
 
-" Emplacement du curseur lors du scroll
+" =[ EMPLACEMENT DU CURSEUR LORS DU SCROLL ]==============================================
 set scrolloff=5           | " Garde toujours le curseur à 5lignes du bord de la fenêtre
 
-" Coloration
+" =[ COLORATION ]=========================================================================
 syntax enable             | " Activation de la coloration syntaxique
 
-" Tab et limites du texte
+" =[ TAB ET LIMITES DU TEXTE ]============================================================
 set expandtab             | " Remplace la tabulation par des espaces
 set tabstop=4    	      | " Remplace la tabulation par 4 espaces
+set shiftwidth=4          | " Elimine le bud d'indentation 8espaces...
 
-" Limitation de largeur du texte
-set textwidth=99          | " Par defaut, indépendemment du filetype, largeur max = 99!
+" =[ LIMITATION DE LARGEUR DU TEXTE ]=====================================================
+set textwidth=90          | " Par defaut, indépendemment du filetype, largeur max = 99!
 
-" Recherches et Surlignages dans le texte
+" =[ RECHERCHES ET SURLIGNAGES DANS LE TEXTE ]============================================
 set incsearch             | " Active la recherche et surlignage pendant la saisie du texte
 set hlsearch              | " Active le surlignage des correspondance   
 set ignorecase            | " Permet d'ignorer la case...
 set smartcase             | " ... mais si on met une maj dans la recherche la prend en compte
 
+ 
+" ========================================================================================
 " GENERAL MAPPINGS
-"Tabulation
+" ========================================================================================
+ 
+" =[ TABULATION ]=========================================================================
 map tn : tabn<CR>         | " Passe à l'onglet vim suivant
 map tp : tabp<CR>         | " Passe à l'onglet vim précédent
 map th : tab help<Space>  | " Ouvre dans un nouvel onglet une page d'aide
@@ -69,20 +81,48 @@ map tt : tabnew<Space>    | " Ouvre un nouvel onglet
 map ts : tab split<Space> | " Ouvre dans un nouvel onglet un fichier existant
 noremap te : tabe<Space>  | " Ouvre dans un nouvel onglet un fichier existant
 
-":save
+" =[ :SAVE ]==============================================================================
 noremap <c-z> :update<CR>
 vnoremap <c-z> <c-c>:update<CR>
 inoremap <c-z> <c-o>:update<CR>
 
-":nohl
+" =[ :NOHL : CTRL+N PERMET D'ARRÊTER LE SURLIGNAGE ACTIF  ]==============================
 noremap <c-n> :nohl<CR>
 vnoremap <c-n> <c-c>:nohl<CR>
 inoremap <c-n> <c-o>:nohl<CR>
 
-":sort
+" =[ :SORT : CTRL+T PERMET DE TRIER L'ENSEMBLE DES LIGNES SELECTIONNÉES ]================
 vnoremap <leader>t :sort<CR>
 
-"Search&Replace
+" =[ SEARCH&REPLACE ]=====================================================================
 noremap ;; :%s:::gic<left><left><left><left><left>
 vnoremap ;; :s:::gic<left><left><left><left><left>
 
+ 
+" ========================================================================================
+" CONFIGURATION PLUGINS
+" ========================================================================================
+ 
+" =[ GRUVBOX ]============================================================================
+" -[ DÉCLARATION DU THÈME ]-------------------------------------------------------------
+set t_Co=256
+set background=dark
+colorscheme gruvbox
+
+" -[ FONCTION AFFICHANT LA COLONE LIMITE QUAND ELLE EXISTE ]------------------------------
+" Si textwidth est déclarée, accorde colorcolumn avec sa valeur
+" Sinon met la limite à 80 (pour 79)
+function! SetColorColumnPerFile()
+    "Récupération de la valeur de textwidth dans var-locale:textaille
+    let l:textaille = substitute(trim(execute(":set textwidth?")),"textwidth=","","")
+    if l:textaille == 0
+        setlocal colorcolumn=80
+    else
+        execute(":setlocal colorcolumn=".l:textaille)
+    endif
+endfunction
+"Lancement automatique à chaque chargement
+augroup colorcolumn
+    autocmd!
+    autocmd BufEnter * call SetColorColumnPerFile()
+augroup end
