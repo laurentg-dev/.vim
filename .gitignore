@@ -1,6 +1,6 @@
 #Ignorer les READMEs
-README.md
-*.readme
+#README.md
+#*.readme
 
 #Ignorer les fichiers de sauvegardes (SWAP-FILES)
 *~
