@@ -1,0 +1,15 @@
+#Ignorer les READMEs
+README.md
+*.readme
+
+#Ignorer les fichiers de sauvegardes (SWAP-FILES)
+*~
+*.swo
+*.swp
+
+#Ignorer les fichiers historique générés par vim
+viminfo
+.netrwhist
+
+#Ignorer fichiers rapport
+bugreport.txt
